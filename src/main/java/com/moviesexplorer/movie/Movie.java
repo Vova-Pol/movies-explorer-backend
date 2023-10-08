@@ -19,12 +19,12 @@ public class Movie {
     private String trailerLink;
     private LocalDate created_at;
     private LocalDate updated_at;
-    private MovieImage image;
+    private String image;
 
     public Movie() {
     }
 
-    public Movie(Long id, String nameRU, String nameEN, String director, String country, String year, int duration, String description, String trailerLink, LocalDate created_at, LocalDate updated_at, MovieImage image) {
+    public Movie(Long id, String nameRU, String nameEN, String director, String country, String year, int duration, String description, String trailerLink, LocalDate created_at, LocalDate updated_at, String image) {
         this.id = id;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
@@ -127,11 +127,11 @@ public class Movie {
         this.updated_at = updated_at;
     }
 
-    public MovieImage getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(MovieImage image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }
