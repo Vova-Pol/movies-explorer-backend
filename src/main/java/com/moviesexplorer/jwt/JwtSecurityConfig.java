@@ -5,7 +5,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -47,7 +46,6 @@ public class JwtSecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(auth -> auth
                 	.requestMatchers("/authenticate").permitAll()
-                	.requestMatchers(PathRequest.toH2Console()).permitAll() // h2-console is a servlet and NOT recommended for a production
                     .requestMatchers(HttpMethod.OPTIONS,"/**")
                     .permitAll()
                     .anyRequest()
@@ -76,8 +74,8 @@ public class JwtSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("in28minutes")
-                                .password("{noop}dummy")
+        UserDetails user = User.withUsername("Vladimir")
+                                .password("{noop}12345")
                                 .authorities("read")
                                 .roles("USER")
                                 .build();
