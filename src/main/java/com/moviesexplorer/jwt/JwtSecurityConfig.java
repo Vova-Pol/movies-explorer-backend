@@ -46,8 +46,7 @@ public class JwtSecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(auth -> auth
                 	.requestMatchers("/authenticate").permitAll()
-                    .requestMatchers(HttpMethod.OPTIONS,"/**")
-                    .permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                     .anyRequest()
                     .authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -75,7 +74,7 @@ public class JwtSecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withUsername("Vladimir")
-                                .password("{noop}12345")
+                                .password("{noop}12345678")
                                 .authorities("read")
                                 .roles("USER")
                                 .build();
