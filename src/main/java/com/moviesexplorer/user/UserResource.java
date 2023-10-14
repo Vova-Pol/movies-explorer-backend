@@ -27,11 +27,22 @@ public class UserResource {
         return foundUser;
     }
 
-    @PostMapping("/users")
-    public User postUser(@RequestBody User user) {
-        userRepository.save(user);
+    @PostMapping("/register")
+    public User registerUser(@RequestBody User user) {
+        Optional<User> foundUser = userRepository.findByEmail(user.getEmail());
+        if (foundUser.isPresent()) throw new RuntimeException("User with such email already exist");
+
+        // хэшируем пароль bcrypt
+        // сохраняем user в БД
+        // возвращаем user
         return user;
     }
+
+//    @PostMapping("/users")
+//    public User postUser(@RequestBody User user) {
+//        userRepository.save(user);
+//        return user;
+//    }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
