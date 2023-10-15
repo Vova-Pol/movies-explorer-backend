@@ -41,8 +41,7 @@ public class JwtSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // https://github.com/spring-projects/spring-security/issues/1231
-        // https://docs.spring.io/spring-boot/docs/current/reference/html/data.html#data.sql.h2-web-console.spring-security
+
         return httpSecurity
                 .authorizeHttpRequests(auth -> auth
                 	.requestMatchers("/authenticate").permitAll()
@@ -52,14 +51,10 @@ public class JwtSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.
                 	sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) // Deprecated in SB 3.1.x
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults())) // Starting from SB 3.1.x using Lambda DSL
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()))
                 .httpBasic(
                         Customizer.withDefaults())
-//                .headers(header -> { // Deprecated in SB 3.1.x
-//                    header.frameOptions().sameOrigin();
-//                })
-                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)) // Starting from SB 3.1.x using Lambda DSL
+                .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .build();
     }
 
