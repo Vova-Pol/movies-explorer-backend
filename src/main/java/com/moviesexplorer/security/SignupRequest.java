@@ -1,38 +1,14 @@
-package com.moviesexplorer.user;
+package com.moviesexplorer.security;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @Column
+public class SignupRequest {
     private String username;
-    @Column
     private String email;
-    @Column
-    @JsonIgnore
     private String password;
 
-    public User(Long id, String username, String email, String password) {
-        this.id = id;
+    public SignupRequest(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public User() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
