@@ -30,7 +30,6 @@ public class TokenFilter extends OncePerRequestFilter {
         String username = null;
         UserDetails userDetails = null;
         UsernamePasswordAuthenticationToken auth = null;
-        System.out.println("In Token Filter");
 
         try {
             String headerAuth = request.getHeader("Authorization");
@@ -42,9 +41,8 @@ public class TokenFilter extends OncePerRequestFilter {
             if (jwt != null) {
                 try {
                     username = jwtCore.getNameFromJwt(jwt);
-                    System.out.println("username: " + username);
                 } catch (ExpiredJwtException e) {
-                    System.out.println(e);
+                    System.out.println("Ошибка при проверке токена: " + e);
                 }
             }
 
@@ -54,12 +52,8 @@ public class TokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Ошибка при сохранении UserDetails в SecurityContextHolder" + e);
         }
-        System.out.println(jwt);
-        System.out.println(username);
-        System.out.println(userDetails);
-        System.out.println(auth);
 
         filterChain.doFilter(request, response);
     }
