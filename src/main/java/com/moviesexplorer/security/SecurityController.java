@@ -64,4 +64,9 @@ public class SecurityController {
         String jwt = jwtCore.generateToken(authentication);
         return ResponseEntity.ok(jwt);
     }
+
+    @PostMapping("/signout")
+    public void signout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
 }
