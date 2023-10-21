@@ -50,9 +50,10 @@ public class TokenFilter extends OncePerRequestFilter {
                 userDetails = userDetailsService.loadUserByUsername(username);
                 auth = new UsernamePasswordAuthenticationToken(userDetails, null);
                 SecurityContextHolder.getContext().setAuthentication(auth);
+                request.setAttribute("username", username);
             }
         } catch (Exception e) {
-            System.out.println("Ошибка при сохранении UserDetails в SecurityContextHolder" + e);
+            System.out.println("Ошибка при сохранении UserDetails в SecurityContextHolder: " + e);
         }
 
         filterChain.doFilter(request, response);
