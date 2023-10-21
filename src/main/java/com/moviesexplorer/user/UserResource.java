@@ -1,7 +1,9 @@
 package com.moviesexplorer.user;
 
 import com.moviesexplorer.jpa.UserRepository;
-import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +22,15 @@ public class UserResource {
         return userRepository.findAll();
     }
 
-    @GetMapping("/users/{id}")
-    public Optional<User> getUser(@PathVariable Long id) {
-        Optional<User> foundUser = userRepository.findById(id);
-        if (foundUser.isEmpty()) throw new RuntimeException("User wasn't found");
+    @GetMapping("/users/me")
+    public Optional<User> getUser(HttpServletRequest request) {
+        String username = (String) request.getAttribute("username");
+
+        Optional<User> foundUser = userRepository.findByUsername(username);
+        if (foundUser.isEmpty()) throw new UserNotFoundException("User wasn't found");
+
         return foundUser;
     }
+
+
 }
