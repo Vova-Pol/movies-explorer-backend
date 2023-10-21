@@ -26,5 +26,4 @@ public class UserResource {
         if (foundUser.isEmpty()) throw new RuntimeException("User wasn't found");
         return foundUser;
     }
-
 }
