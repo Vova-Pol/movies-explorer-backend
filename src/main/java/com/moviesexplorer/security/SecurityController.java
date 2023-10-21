@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,13 +31,18 @@ public class SecurityController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+
+        // Проверка, существует ли уже пользователь
+
         if (userRepository.existsUserByUsername(signupRequest.getUsername())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with such name already exists");
+            throw new UserAlreadyExistsException("User with such username already exists");
         }
 
         if (userRepository.existsUserByEmail(signupRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with such email already exists");
+         throw new UserAlreadyExistsException("User with such email already exists");
         }
+
+        // Создание нового пользователя
 
         String hashedPassword = passwordEncoder.encode(signupRequest.getPassword());
         User user = new User();
@@ -45,28 +51,52 @@ public class SecurityController {
         user.setPassword(hashedPassword);
         userRepository.save(user);
 
-        return ResponseEntity.ok(user);
+        // Выпуск токена
 
-    }
-
-    @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
         Authentication authentication = null;
         try {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            signinRequest.getUsername(), signinRequest.getPassword()
+                            signupRequest.getUsername(), signupRequest.getPassword()
                     ));
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtCore.generateToken(authentication);
-        return ResponseEntity.ok(jwt);
+
+        return ResponseEntity.ok(new AuthResponse(user, jwt));
+
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
+        String username = signinRequest.getUsername();
+        String password = signinRequest.getPassword();
+
+        User foundUser = userRepository.findByUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+
+        Authentication authentication = null;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtCore.generateToken(authentication);
+
+
+        return ResponseEntity.ok(new AuthResponse(foundUser, jwt));
     }
 
     @PostMapping("/signout")
-    public void signout() {
+    public ResponseEntity<?> signout() {
+
         SecurityContextHolder.getContext().setAuthentication(null);
+        return ResponseEntity.ok(new SignoutResponse("You have successfully logged out"));
     }
 }
