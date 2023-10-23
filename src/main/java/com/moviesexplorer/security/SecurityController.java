@@ -2,6 +2,8 @@ package com.moviesexplorer.security;
 
 import com.moviesexplorer.jpa.UserRepository;
 import com.moviesexplorer.user.User;
+import com.moviesexplorer.user.UserNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -99,5 +102,39 @@ public class SecurityController {
 
         SecurityContextHolder.getContext().setAuthentication(null);
         return ResponseEntity.ok(new SignoutResponse("You have successfully logged out"));
+    }
+
+    @PatchMapping("users/me")
+    public ResponseEntity<?> patchUsername(@RequestBody UpdateUsernameRequest updateUsernameRequest, HttpServletRequest request) {
+        String newUsername = updateUsernameRequest.getUsername();
+        String password = updateUsernameRequest.getPassword();
+        String currentUsername = (String) request.getAttribute("username");
+
+        if (userRepository.existsUserByUsername(newUsername)) {
+            throw new UserAlreadyExistsException("User with such username already exists");
+        }
+
+        User foundUser = userRepository.findByUsername(currentUsername).orElseThrow(
+                () -> new UserNotFoundException("User wasn't found"));
+
+            System.out.println(newUsername);
+            System.out.println(password);
+            foundUser.setUsername(newUsername);
+            User updatedUser = userRepository.save(foundUser);
+
+
+            Authentication authentication = null;
+            try {
+                authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(newUsername, password));
+            } catch (BadCredentialsException e) {
+                System.out.println("Bad cred");
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            }
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtCore.generateToken(authentication);
+
+            return ResponseEntity.ok(new AuthResponse(updatedUser, jwt));
     }
 }
