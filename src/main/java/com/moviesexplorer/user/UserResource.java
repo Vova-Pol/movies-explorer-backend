@@ -2,6 +2,8 @@ package com.moviesexplorer.user;
 
 import com.moviesexplorer.jpa.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,5 +34,10 @@ public class UserResource {
         return foundUser;
     }
 
+    // Для тестов
+    @GetMapping("/test")
+    public SecurityContext test() {
+        return SecurityContextHolder.getContext();
+    }
 
 }
