@@ -60,7 +60,7 @@ public class SecurityController {
                             signupRequest.getUsername(), signupRequest.getPassword()
                     ));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtCore.generateToken(authentication);
@@ -76,14 +76,15 @@ public class SecurityController {
 
         User foundUser = userRepository.findByUsername(username)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+                        () -> new UsernameNotFoundException(String.format("User '%s' not found", username))
+                );
 
         Authentication authentication = null;
         try {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
