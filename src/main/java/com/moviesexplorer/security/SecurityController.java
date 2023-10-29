@@ -52,6 +52,10 @@ public class SecurityController {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(hashedPassword);
+        user.setFirstName(null);
+        user.setLastName(null);
+        user.setFavouriteGenres(null);
+        user.setDateOfBirth(null);
         userRepository.save(user);
 
         // Выпуск токена
