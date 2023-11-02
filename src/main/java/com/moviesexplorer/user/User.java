@@ -1,9 +1,12 @@
 package com.moviesexplorer.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
@@ -17,10 +20,10 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String[] favouriteGenres;
 
-    public User(Long id, String username, String email, String password, String firstName, String lastName, Date dateOfBirth, String[] favouriteGenres) {
+    public User(Long id, String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String[] favouriteGenres) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -82,11 +85,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

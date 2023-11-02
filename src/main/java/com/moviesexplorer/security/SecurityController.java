@@ -52,9 +52,9 @@ public class SecurityController {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(hashedPassword);
-        user.setFirstName(null);
-        user.setLastName(null);
-        user.setFavouriteGenres(null);
+        user.setFirstName("");
+        user.setLastName("");
+        user.setFavouriteGenres(new String[9]);
         user.setDateOfBirth(null);
         userRepository.save(user);
 
