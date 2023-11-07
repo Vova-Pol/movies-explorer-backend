@@ -1,5 +1,6 @@
 package com.moviesexplorer.user;
 
+import com.moviesexplorer.exceptions.UserNotFoundException;
 import com.moviesexplorer.jpa.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContext;
@@ -12,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class UserResource {
+public class UserController {
 
     private UserRepository userRepository;
 
-    public UserResource(UserRepository userRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
