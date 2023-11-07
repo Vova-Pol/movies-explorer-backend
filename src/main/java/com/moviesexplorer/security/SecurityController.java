@@ -1,8 +1,9 @@
 package com.moviesexplorer.security;
 
+import com.moviesexplorer.exceptions.UserAlreadyExistsException;
 import com.moviesexplorer.jpa.UserRepository;
 import com.moviesexplorer.user.User;
-import com.moviesexplorer.user.UserNotFoundException;
+import com.moviesexplorer.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,7 +109,7 @@ public class SecurityController {
         return ResponseEntity.ok(new SignoutResponse("You have successfully logged out"));
     }
 
-    @PatchMapping("users/me")
+    @PatchMapping("users/me/username")
     public ResponseEntity<?> patchUsername(@RequestBody UpdateUsernameRequest updateUsernameRequest, HttpServletRequest request) {
         String newUsername = updateUsernameRequest.getUsername();
         String password = updateUsernameRequest.getPassword();
@@ -121,8 +122,6 @@ public class SecurityController {
         User foundUser = userRepository.findByUsername(currentUsername).orElseThrow(
                 () -> new UserNotFoundException("User wasn't found"));
 
-            System.out.println(newUsername);
-            System.out.println(password);
             foundUser.setUsername(newUsername);
             User updatedUser = userRepository.save(foundUser);
 
@@ -132,7 +131,6 @@ public class SecurityController {
                 authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(newUsername, password));
             } catch (BadCredentialsException e) {
-                System.out.println("Bad cred");
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
             }
 
