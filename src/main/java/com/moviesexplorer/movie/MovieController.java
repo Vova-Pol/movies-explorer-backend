@@ -4,10 +4,10 @@ import com.moviesexplorer.jpa.MovieRepository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class MovieResource {
+public class MovieController {
     private MovieRepository movieRepository;
 
-    public MovieResource(MovieRepository movieRepository) {
+    public MovieController(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
 
