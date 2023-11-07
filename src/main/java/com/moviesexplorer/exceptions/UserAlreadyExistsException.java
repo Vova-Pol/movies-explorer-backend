@@ -1,4 +1,4 @@
-package com.moviesexplorer.security;
+package com.moviesexplorer.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
