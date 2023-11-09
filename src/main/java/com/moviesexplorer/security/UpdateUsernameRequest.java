@@ -1,6 +1,9 @@
 package com.moviesexplorer.security;
 
+import jakarta.validation.constraints.Size;
+
 public class UpdateUsernameRequest {
+    @Size(min = 2, max = 15, message = "username should be from 2 to 15 characters long")
     private String username;
     private String password;
 

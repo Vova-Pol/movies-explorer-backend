@@ -5,6 +5,7 @@ import com.moviesexplorer.jpa.UserRepository;
 import com.moviesexplorer.user.User;
 import com.moviesexplorer.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 
 @RestController
 public class SecurityController {
@@ -34,7 +37,7 @@ public class SecurityController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest signupRequest) {
 
         // Проверка, существует ли уже пользователь
 
@@ -57,6 +60,7 @@ public class SecurityController {
         user.setLastName("");
         user.setFavouriteGenres(new String[9]);
         user.setDateOfBirth(null);
+        user.setSavedMovies(new ArrayList<>());
         userRepository.save(user);
 
         // Выпуск токена
@@ -78,7 +82,7 @@ public class SecurityController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
+    public ResponseEntity<?> signin(@Valid @RequestBody SigninRequest signinRequest) {
         String username = signinRequest.getUsername();
         String password = signinRequest.getPassword();
 
@@ -110,7 +114,7 @@ public class SecurityController {
     }
 
     @PatchMapping("users/me/username")
-    public ResponseEntity<?> patchUsername(@RequestBody UpdateUsernameRequest updateUsernameRequest, HttpServletRequest request) {
+    public ResponseEntity<?> patchUsername(@Valid @RequestBody UpdateUsernameRequest updateUsernameRequest, HttpServletRequest request) {
         String newUsername = updateUsernameRequest.getUsername();
         String password = updateUsernameRequest.getPassword();
         String currentUsername = (String) request.getAttribute("username");

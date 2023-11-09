@@ -3,6 +3,7 @@ package com.moviesexplorer.user;
 import com.moviesexplorer.exceptions.UserNotFoundException;
 import com.moviesexplorer.jpa.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,18 +43,18 @@ public class UserController {
     }
 
     @PatchMapping("/users/me/profile")
-    public PatchUserResponse patchUser(HttpServletRequest request, @RequestBody PatchUserRequest body ) {
+    public PatchUserResponse patchUser(HttpServletRequest request, @Valid @RequestBody PatchUserRequest body ) {
         String username = (String) request.getAttribute("username");
 
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("User wasn't found")
         );
 
-        if (!body.lastName().equals(user.getLastName())) user.setLastName(body.lastName());
-        if (!body.firstName().equals(user.getFirstName())) user.setFirstName(body.firstName());
-        if (!body.email().equals(user.getEmail())) user.setEmail(body.email());
-        if (!body.dateOfBirth().equals(user.getDateOfBirth())) user.setDateOfBirth(body.dateOfBirth());
-        if (!body.favouriteGenres().equals(user.getFavouriteGenres())) user.setFavouriteGenres(body.favouriteGenres());
+        if (!body.getLastName().equals(user.getLastName())) user.setLastName(body.getLastName());
+        if (!body.getFirstName().equals(user.getFirstName())) user.setFirstName(body.getFirstName());
+        if (!body.getEmail().equals(user.getEmail())) user.setEmail(body.getEmail());
+        if (!body.getDateOfBirth().equals(user.getDateOfBirth())) user.setDateOfBirth(body.getDateOfBirth());
+        if (!body.getFavouriteGenres().equals(user.getFavouriteGenres())) user.setFavouriteGenres(body.getFavouriteGenres());
         User savedUser = userRepository.save(user);
 
         return new PatchUserResponse(
