@@ -15,7 +15,7 @@ public class Movie {
     private String country;
     private String year;
     private int duration;
-
+    @Column(length = 1000)
     private String description;
     private String trailerLink;
     private LocalDate created_at;
@@ -146,5 +146,16 @@ public class Movie {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", nameRU='" + nameRU + '\'' +
+                ", country='" + country + '\'' +
+                ", year='" + year + '\'' +
+                ", owner=" + owner +
+                '}';
     }
 }

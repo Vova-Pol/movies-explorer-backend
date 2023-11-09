@@ -5,6 +5,7 @@ import com.moviesexplorer.movie.Movie;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -110,5 +111,19 @@ public class User {
 
     public void setSavedMovies(List<Movie> savedMovies) {
         this.savedMovies = savedMovies;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", favouriteGenres=" + Arrays.toString(favouriteGenres) +
+                '}';
     }
 }
