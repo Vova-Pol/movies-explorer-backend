@@ -1,5 +1,6 @@
 package com.moviesexplorer.movie;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moviesexplorer.user.User;
 import jakarta.persistence.*;
 
@@ -23,6 +24,7 @@ public class Movie {
     private String image;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner")
+    @JsonIgnore
     private User owner;
 
     public Movie() {
