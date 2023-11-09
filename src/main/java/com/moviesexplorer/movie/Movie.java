@@ -1,7 +1,7 @@
 package com.moviesexplorer.movie;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.moviesexplorer.user.User;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -15,16 +15,20 @@ public class Movie {
     private String country;
     private String year;
     private int duration;
+
     private String description;
     private String trailerLink;
     private LocalDate created_at;
     private LocalDate updated_at;
     private String image;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner")
+    private User owner;
 
     public Movie() {
     }
 
-    public Movie(Long id, String nameRU, String nameEN, String director, String country, String year, int duration, String description, String trailerLink, LocalDate created_at, LocalDate updated_at, String image) {
+    public Movie(Long id, String nameRU, String nameEN, String director, String country, String year, int duration, String description, String trailerLink, LocalDate created_at, LocalDate updated_at, String image, User owner) {
         this.id = id;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
@@ -37,6 +41,7 @@ public class Movie {
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.image = image;
+        this.owner = owner;
     }
 
     public Long getId() {
@@ -133,5 +138,13 @@ public class Movie {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }

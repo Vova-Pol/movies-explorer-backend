@@ -1,12 +1,11 @@
 package com.moviesexplorer.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.moviesexplorer.movie.Movie;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -22,8 +21,11 @@ public class User {
     private String lastName;
     private LocalDate dateOfBirth;
     private String[] favouriteGenres;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
+    private List<Movie> savedMovies;
 
-    public User(Long id, String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String[] favouriteGenres) {
+    public User(Long id, String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String[] favouriteGenres, List<Movie> savedMovies) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -32,6 +34,7 @@ public class User {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.favouriteGenres = favouriteGenres;
+        this.savedMovies = savedMovies;
     }
 
     public User() {
@@ -99,5 +102,13 @@ public class User {
 
     public void setFavouriteGenres(String[] favouriteGenres) {
         this.favouriteGenres = favouriteGenres;
+    }
+
+    public List<Movie> getSavedMovies() {
+        return savedMovies;
+    }
+
+    public void setSavedMovies(List<Movie> savedMovies) {
+        this.savedMovies = savedMovies;
     }
 }
